@@ -6,7 +6,7 @@ const Person = () => {
       {/* Avatar */}
       <div className="relative">
         <img
-          src="/avatar.jpg"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLbiTUHsTC_wxMaax5F7F4-QjbiH3PKDpvHg&s"
           alt="User Avatar"
           className="w-12 h-12 rounded-full object-cover"
         />
