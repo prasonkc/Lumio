@@ -2,7 +2,7 @@ import React from "react";
 
 const Person = () => {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-100 transition cursor-pointer">
+    <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-700 transition cursor-pointer">
       {/* Avatar */}
       <div className="relative">
         <img
@@ -17,7 +17,7 @@ const Person = () => {
       {/* Name + Latest Chat */}
       <div className="flex-1 min-w-0">
         {/* Name */}
-        <h3 className="text-sm font-semibold text-gray-900 truncate">
+        <h3 className="text-sm font-semibold text-gray-100 truncate">
           John Doe
         </h3>
         {/* Latest Chat */}

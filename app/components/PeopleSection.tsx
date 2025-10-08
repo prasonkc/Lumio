@@ -53,7 +53,7 @@ const PeopleSection = () => {
       <div className="my-5">
         <Person />
         <Person />
-        <Person />2
+        <Person />
       </div>
     </div>
   );
