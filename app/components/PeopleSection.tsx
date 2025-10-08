@@ -51,9 +51,9 @@ const PeopleSection = () => {
 
       {/* Peoples Section */}
       <div className="my-5">
-        <Person />
-        <Person />
-        <Person />
+        <Person name="John Doe" avatarUrl="https://picsum.photos/102" latestChat="Haha" isOnline={false} />
+        <Person name="John Daddy" avatarUrl="https://picsum.photos/101" latestChat="Hello?" isOnline={true}/>
+        <Person name="John Dickens" avatarUrl="https://picsum.photos/110" latestChat="Fuck You" isOnline={true}/>
       </div>
     </div>
   );
