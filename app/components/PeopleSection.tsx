@@ -4,7 +4,7 @@ import Person from "./Person";
 
 const PeopleSection = () => {
   return (
-    <div className="bg-gray-800 w-1/4 min-h-screen">
+    <div className="bg-gray-800 w-1/4 min-h-screen rounded-2xl">
       <div className="sticky top-0 z-10 bg-gray-800">
         {/* Header */}
         <div className="flex items-center justify-between mx-5">
