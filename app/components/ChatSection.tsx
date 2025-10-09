@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ChatBubble from "./ChatBubble";
 import { Send } from "lucide-react";
+import io from "socket.io-client"
 
 const ChatSection = () => {
+  useEffect(() => {
+    // Connect to socket server
+    const socket = io({path: "/api/socket"})
+    
+
+
+  }, [])
+  
+
   return (
     <div className="bg-gray-700 w-2/3 min-h-screen p-3 relative">
       <ChatBubble
