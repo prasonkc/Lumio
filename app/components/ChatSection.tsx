@@ -5,11 +5,21 @@ import io from "socket.io-client"
 
 const ChatSection = () => {
   useEffect(() => {
-    // Connect to socket server
-    const socket = io({path: "/api/socket"})
-    
+    // initialize socket server
+const socket = io("http://localhost:4000", {
+  path: "/api/socket",
+  transports: ["websocket", "polling"],
+});    
+    // Connect to server
+    socket.on("connect", () => {console.log("connected", socket.id)})
 
+    socket.on("new-message", (msg: string) => console.log("new-message:", msg));    return () => {
+      socket.disconnect();
+    };
 
+    return () => {
+      socket.disconnect();
+    };
   }, [])
   
 
