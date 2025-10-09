@@ -10,35 +10,46 @@ const socket = io("http://localhost:4000", {
 
 const ChatSection = () => {
   const [msg, setMsg] = useState("");
+  // Set messages array
+  const [messages, setMessages] = useState<
+    { text: string; isSender: boolean }[]
+  >([]);
+
   useEffect(() => {
     // Connect to server
     socket.on("connect", () => {
       console.log("connected", socket.id);
     });
 
-    socket.on("new-message", (msg) => {
-      console.log("New message:", msg);
-      setMsg(msg)
+    socket.on("new-message", (newMsg) => {
+      console.log("New message:", newMsg);
+      setMessages((prev) => [...prev, { text: newMsg, isSender: true }]);
     });
   }, []);
 
   const sendMessage = () => {
-      socket?.emit("send-message", msg);
+    // Dont send empty messages
+    if (!msg.trim()) return;
+    socket?.emit("send-message", msg);
+    // setMessages((prev) => [...prev, { text: msg, isSender: false }]);
+    setMsg("");
   };
 
   return (
     <div className="bg-gray-700 w-2/3 min-h-screen p-3 relative">
-      <ChatBubble
-        isSender={false}
-        text={msg}
-        avatarUrl="https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE="
-      />
-
-      <ChatBubble
-        isSender={true}
-        text="Hello World"
-        avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLbiTUHsTC_wxMaax5F7F4-QjbiH3PKDpvHg&s"
-      />
+      {/* Chats */}
+      {messages.map((m, index) => (
+        <ChatBubble
+          key={index}
+          isSender={m.isSender}
+          text={m.text}
+          avatarUrl={
+            m.isSender
+              ? "https://i.pravatar.cc/40?u=sender"
+              : "https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE="
+          }
+        />
+      ))}
 
       {/* Typing Section */}
       <div className="absolute bottom-0 w-full flex items-center justify-center p-5 bg-transparent">
@@ -47,7 +58,9 @@ const ChatSection = () => {
             type="text"
             placeholder="Message..."
             className="flex-1 bg-transparent outline-none text-white placeholder-gray-300"
-            onChange={(e) => setMsg(e.target.value)}
+            onChange={(e) => {
+              setMsg(e.target.value);
+            }}
             value={msg}
           />
           <button
