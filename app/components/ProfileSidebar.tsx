@@ -1,7 +1,12 @@
 import React from "react";
 import { Image, FileText, Video } from "lucide-react";
 
-const ProfileSection = () => {
+interface SidebarProps{
+  name: string,
+  onlineStatus: boolean
+}
+
+const ProfileSidebar: React.FC<SidebarProps> = ({name, onlineStatus}) => {
   return (
     <div className="bg-gray-800 w-1/4 min-h-screen text-white flex flex-col items-center p-6 border-l border-gray-700">
       {/* Avatar */}
@@ -11,8 +16,8 @@ const ProfileSection = () => {
           alt="Profile Avatar"
           className="w-24 h-24 rounded-full object-cover border-4 border-gray-700 shadow-md"
         />
-        <h2 className="mt-4 text-xl font-semibold">John Doe</h2>
-        <p className="text-sm text-gray-400">Online</p>
+        <h2 className="mt-4 text-xl font-semibold">{name}</h2>
+        <p className="text-sm text-gray-400">{onlineStatus}</p>
       </div>
 
       {/* Divider */}
@@ -57,4 +62,4 @@ const ProfileSection = () => {
   );
 };
 
-export default ProfileSection;
+export default ProfileSidebar;

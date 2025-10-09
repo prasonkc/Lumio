@@ -2,7 +2,14 @@ import React from "react";
 import { MoreVertical, Search, MessageCircle, Users } from "lucide-react";
 import Person from "./Person";
 
-const PeopleSection = () => {
+interface PeopleProps{
+  name: string,
+  avatarUrl: string,
+  latestChat: string,
+  isOnline: boolean
+}
+
+const PeopleSection: React.FC<PeopleProps> = ({name, avatarUrl, latestChat, isOnline}) => {
   return (
     <div className="bg-gray-800 w-1/4 min-h-screen rounded-2xl">
       <div className="sticky top-0 z-10 bg-gray-800">
@@ -51,9 +58,7 @@ const PeopleSection = () => {
 
       {/* Peoples Section */}
       <div className="my-5">
-        <Person name="John Doe" avatarUrl="https://picsum.photos/102" latestChat="Haha" isOnline={false} />
-        <Person name="John Daddy" avatarUrl="https://picsum.photos/101" latestChat="Hello?" isOnline={true}/>
-        <Person name="John Dickens" avatarUrl="https://picsum.photos/110" latestChat="Fuck You" isOnline={true}/>
+        <Person name={name} avatarUrl={avatarUrl} latestChat={latestChat} isOnline={isOnline} />
       </div>
     </div>
   );

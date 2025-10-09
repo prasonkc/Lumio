@@ -1,14 +1,22 @@
+"use client";
+
 import Image from "next/image";
 import PeopleSection from "./components/PeopleSection";
-import ChatSection from "./components/ChatSection"
-import ProfileSection from "./components/ProfileSidebar"
+import ChatSection from "./components/ChatSection";
+import ProfileSidebar from "./components/ProfileSidebar";
+import { useState } from "react";
 
 export default function Home() {
+  const [name, setname] = useState("");
+  const [avatarUrl, setavatarUrl] = useState("")
+  const [onlineStatus, setonlineStatus] = useState(false);
+  const [latestMessage, setLatestMessage] = useState("");
+  // Fetch from database
   return (
     <div className="flex">
-        <PeopleSection></PeopleSection>
-        <ChatSection></ChatSection>
-        <ProfileSection></ProfileSection>
-    </div>  
+    <PeopleSection name={name} avatarUrl={avatarUrl} isOnline={onlineStatus} latestChat={latestMessage} />
+      <ChatSection />
+      <ProfileSidebar name={name} onlineStatus={onlineStatus}/>
+    </div>
   );
 }
