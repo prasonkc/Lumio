@@ -8,8 +8,11 @@ const socket = io("http://localhost:4000", {
   transports: ["websocket", "polling"],
 });
 
-const ChatSection = () => {
-  const [msg, setMsg] = useState("");
+interface ChatProps{
+  roomId: string
+}
+const ChatSection: React.FC<ChatProps> = ({roomId}) => {
+  const [message, setMessage] = useState("");
   // Set messages array
   const [messages, setMessages] = useState<
     { text: string; isSender: boolean }[]
@@ -20,19 +23,21 @@ const ChatSection = () => {
     socket.on("connect", () => {
       console.log("connected", socket.id);
     });
+    
+    // Connect to a room
+    socket.emit("join-room", roomId)
 
-    socket.on("new-message", (newMsg) => {
-      console.log("New message:", newMsg);
-      setMessages((prev) => [...prev, { text: newMsg, isSender: true }]);
+    socket.on("new-message", (newMessage) => {
+      setMessages((prev) => [...prev, { text: newMessage, isSender: true }]);
     });
-  }, []);
+  }, [roomId]);
 
   const sendMessage = () => {
     // Dont send empty messages
-    if (!msg.trim()) return;
-    socket?.emit("send-message", msg);
-    // setMessages((prev) => [...prev, { text: msg, isSender: false }]);
-    setMsg("");
+    if (!message.trim()) return;
+    socket?.emit("send-message", {roomId, message: message});
+    // setMessages((prev) => [...prev, { text: msg, isSender: false" }]);
+    setMessage("");
   };
 
   return (
@@ -59,9 +64,9 @@ const ChatSection = () => {
             placeholder="Message..."
             className="flex-1 bg-transparent outline-none text-white placeholder-gray-300"
             onChange={(e) => {
-              setMsg(e.target.value);
+              setMessage(e.target.value);
             }}
-            value={msg}
+            value={message}
           />
           <button
             className="ml-2 text-blue-400 hover:text-blue-500 cursor-pointer"

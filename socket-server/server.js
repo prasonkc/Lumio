@@ -7,7 +7,7 @@ const httpServer = http.createServer();
 //  Attach Socket.IO server
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",        
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -16,12 +16,22 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
+  // Join a private room
+  socket.on("join-room", (roomId) => {
+    socket.join(roomId);
+    console.log(`${socket.id} joined room ${roomId}`);
+  });
+
   // Listen for messages from this client
-  socket.on("send-message", (msg) => {
-    console.log("Message received:", msg);
+  socket.on("send-message", (data) => {
+    const { roomId, message } = data
+    console.log("Message received:", message);
+
+    // Only broadcast to specific room
+    io.to(roomId).emit("new-message", message)
 
     // Broadcast to all clients
-    io.emit("new-message", msg);
+    // io.emit("new-message", msg);
   });
 
   // Typing indicator

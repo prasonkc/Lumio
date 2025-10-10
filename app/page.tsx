@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div className="flex">
     <PeopleSection name={name} avatarUrl={avatarUrl} isOnline={onlineStatus} latestChat={latestMessage} />
-      <ChatSection />
+      <ChatSection roomId="room123"/>
       <ProfileSidebar name={name} onlineStatus={onlineStatus}/>
     </div>
   );
