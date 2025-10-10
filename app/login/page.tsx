@@ -1,19 +1,39 @@
-"use client"
-import React from "react";
-import { useState } from "react";
+"use client";
 
-const Login = () => {
+import React, { useState, useEffect } from "react";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
+const Login: React.FC = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
-  const handleSubmit = (e:React.FormEvent) => {
-    e.preventDefault;
-  }
 
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md rounded-2xl bg-gray-900 p-8 shadow-lg">
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+};
+
+// // Redirect if already logged in
+// useEffect(() => {
+//   if (status === "authenticated") {
+//     router.push("/");
+//   }
+// }, [status, router]);
+
+// if (status === "loading") {
+//   return (
+//     <div className="flex min-h-screen items-center justify-center">
+//       <p className="text-white">Loading...</p>
+//     </div>
+//   );
+// }
+
+return (
+  <div className="flex min-h-screen items-center justify-center bg-gray-900">
+      <div className="w-full max-w-md rounded-2xl bg-gray-800 p-8 shadow-lg">
         <h1 className="mb-6 text-center text-2xl font-bold text-white">
           {isLogin ? "Login" : "Sign Up"}
         </h1>
@@ -51,16 +71,17 @@ const Login = () => {
 
         {/* GitHub OAuth login */}
         <button
-          className="w-full rounded-lg border border-gray-300 py-2 text-white hover:bg-gray-800 cursor-pointer"
+          className="w-full rounded-lg border border-gray-300 py-2 text-white hover:bg-gray-700 cursor-pointer"
+          onClick={() => signIn("github")}
         >
           Continue with GitHub
         </button>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-4 text-center text-sm text-gray-400">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-600 hover:underline cursor-pointer"
+            className="text-blue-500 hover:underline cursor-pointer"
             type="button"
           >
             {isLogin ? "Sign up" : "Log in"}
@@ -70,4 +91,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;
