@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import bcrypt from "bcrypt";
+
+const saltRounds = 11; 
 
 const Login: React.FC = () => {
   const { data: session, status } = useSession();
@@ -12,27 +15,41 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-};
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-// // Redirect if already logged in
-// useEffect(() => {
-//   if (status === "authenticated") {
-//     router.push("/");
-//   }
-// }, [status, router]);
+    fetch("/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({email: email, passwordHash: hashedPassword, username: "Null"}),
+    }).then(res => res.json())
+    .then((data) => {
+      console.log(data)
+    }).catch((e) => {
+      console.log(e)
+    })
+  };
 
-// if (status === "loading") {
-//   return (
-//     <div className="flex min-h-screen items-center justify-center">
-//       <p className="text-white">Loading...</p>
-//     </div>
-//   );
-// }
+  // // Redirect if already logged in
+  // useEffect(() => {
+  //   if (status === "authenticated") {
+  //     router.push("/");
+  //   }
+  // }, [status, router]);
 
-return (
-  <div className="flex min-h-screen items-center justify-center bg-gray-900">
+  // if (status === "loading") {
+  //   return (
+  //     <div className="flex min-h-screen items-center justify-center">
+  //       <p className="text-white">Loading...</p>
+  //     </div>
+  //   );
+  // }
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-900">
       <div className="w-full max-w-md rounded-2xl bg-gray-800 p-8 shadow-lg">
         <h1 className="mb-6 text-center text-2xl font-bold text-white">
           {isLogin ? "Login" : "Sign Up"}

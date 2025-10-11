@@ -11,9 +11,8 @@ export interface IUser extends Document {
 const UserSchema: Schema<IUser> = new Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  avatarUrl: { type: String },
   passwordHash: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
-export default (mongoose.models.User as Model<IUser>) || mongoose.model<IUser>("User", UserSchema);
+export default (mongoose.models.User as Model<IUser>) || mongoose.model<IUser>("Lumio", UserSchema);
