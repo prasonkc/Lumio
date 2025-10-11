@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
-const saltRounds = 11; 
+const saltRounds = 11;
 
 const Login: React.FC = () => {
   const { data: session, status } = useSession();
@@ -15,22 +15,31 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    if (!isLogin) {
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    fetch("/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({email: email, passwordHash: hashedPassword, username: "Null"}),
-    }).then(res => res.json())
-    .then((data) => {
-      console.log(data)
-    }).catch((e) => {
-      console.log(e)
-    })
+      fetch("/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          passwordHash: hashedPassword,
+          username: "Null",
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+    }
   };
 
   // // Redirect if already logged in
@@ -99,7 +108,7 @@ const Login: React.FC = () => {
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-blue-500 hover:underline cursor-pointer"
-            type="button"
+            type="submit"
           >
             {isLogin ? "Sign up" : "Log in"}
           </button>
