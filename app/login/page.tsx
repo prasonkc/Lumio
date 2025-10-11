@@ -15,32 +15,37 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!isLogin) {
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-      fetch("/auth/login", {
+  if (!isLogin) {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    try {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: email,
-          passwordHash: hashedPassword,
+          email,
+          password: hashedPassword,
           username: "Null",
         }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } else {
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log("Response:", data);
+    } catch (err) {
+      console.error("Fetch error:", err);
     }
-  };
+  } else {
+    // Login flow here
+  }
+};
+
 
   // // Redirect if already logged in
   // useEffect(() => {
