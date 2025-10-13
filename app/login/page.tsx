@@ -17,50 +17,6 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!isLogin) {
-      // Ask for username
-      const username = prompt("Enter your username:")?.trim();
-      if (!username) {
-        alert("Username is required!");
-        return;
-      }
-
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-      try {
-        const res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email,
-            password: hashedPassword,
-            username,
-          }),
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-        const data = await res.json();
-        console.log("Response:", data);
-
-        if (data.success) {
-          alert("Account created successfully! Please log in.");
-          setIsLogin(true);
-          setEmail("");
-          setPassword("");
-        } else {
-          alert(data.message || "Something went wrong!");
-        }
-      } catch (err) {
-        console.error("Fetch error:", err);
-      }
-    } else {
-      // Login flow will be implemented later
-      console.log("Login flow coming soon...");
-    }
   };
 
   return (
