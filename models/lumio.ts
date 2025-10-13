@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface ILumioUser extends Document {
+export interface LumioUser extends Document {
   username: string;
   password: string;
   email: string;
@@ -12,4 +12,4 @@ const LumioUserSchema: Schema = new Schema({
   email:    { type: String, required: true, unique: true }
 });
 
-export default mongoose.model<ILumioUser>('LumioUser', LumioUserSchema);
+export default mongoose.model<LumioUser>('LumioUser', LumioUserSchema);
