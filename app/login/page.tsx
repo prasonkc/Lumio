@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs";
@@ -15,52 +15,53 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  if (!isLogin) {
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          password: hashedPassword,
-          username: "Null",
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+    if (!isLogin) {
+      // Ask for username
+      const username = prompt("Enter your username:")?.trim();
+      if (!username) {
+        alert("Username is required!");
+        return;
       }
 
-      const data = await res.json();
-      console.log("Response:", data);
-    } catch (err) {
-      console.error("Fetch error:", err);
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            password: hashedPassword,
+            username,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log("Response:", data);
+
+        if (data.success) {
+          alert("Account created successfully! Please log in.");
+          setIsLogin(true);
+          setEmail("");
+          setPassword("");
+        } else {
+          alert(data.message || "Something went wrong!");
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    } else {
+      // Login flow will be implemented later
+      console.log("Login flow coming soon...");
     }
-  } else {
-    // Login flow here
-  }
-};
-
-
-  // // Redirect if already logged in
-  // useEffect(() => {
-  //   if (status === "authenticated") {
-  //     router.push("/");
-  //   }
-  // }, [status, router]);
-
-  // if (status === "loading") {
-  //   return (
-  //     <div className="flex min-h-screen items-center justify-center">
-  //       <p className="text-white">Loading...</p>
-  //     </div>
-  //   );
-  // }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900">
@@ -100,7 +101,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           <span className="text-gray-400 text-sm">or</span>
         </div>
 
-        {/* GitHub OAuth login */}
         <button
           className="w-full rounded-lg border border-gray-300 py-2 text-white hover:bg-gray-700 cursor-pointer"
           onClick={() => signIn("github")}
@@ -113,7 +113,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-blue-500 hover:underline cursor-pointer"
-            type="submit"
+            type="button"
           >
             {isLogin ? "Sign up" : "Log in"}
           </button>
