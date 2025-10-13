@@ -1,16 +1,22 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-export interface LumioUser {
-  _id?: string;
-  username: string;
-  password: string;
+export interface LumioUser extends Document {
+  _id: string
   email: string;
+  password: string;
+  username?: string;
 }
 
-const LumioUserSchema: Schema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  email:    { type: String, required: true, unique: true }
-});
+const LumioUserSchema = new Schema<LumioUser>(
+  {
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    username: { type: String, unique: true, sparse: true }, 
+  },
+  { timestamps: true }
+);
 
-export default mongoose.model<LumioUser>('LumioUser', LumioUserSchema);
+const User: Model<LumioUser> =
+  mongoose.models.LumioUser || mongoose.model<LumioUser>("LumioUser", LumioUserSchema);
+
+export default User;

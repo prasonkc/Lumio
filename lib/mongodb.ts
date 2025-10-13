@@ -1,22 +1,17 @@
 import mongoose from "mongoose";
-import { cache } from "react";
 
-const MONGODB_URI = process.env.MONGODB_URI as string
+export const connectToDB = async () => {
+  if (mongoose.connection.readyState >= 1) return;
 
-let cached = (global as any).mongoose
+  const uri = process.env.MONGODB_URI as string;
 
-if(!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
-}
+  if (!uri) throw new Error("MONGODB_URI not found in .env");
 
-export async function connectToDB(){
-  // Return cached connection if it exists
-  if(cached.conn) {return cached.conn}
-  
-  if(!cached.promise){
-    cached.promise = mongoose.connect(MONGODB_URI).then((e) => {e})
+  try {
+    await mongoose.connect(uri);
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("MongoDB connection failed:", error);
+    throw error;
   }
-
-  cached.conn = await cached.promise
-  return cached.conn
-}
+};

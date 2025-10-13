@@ -1,42 +1,31 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import User from "@/models/lumio";
 import { connectToDB } from "@/lib/mongodb";
-import User from "@/models/lumio"
 
 export async function POST(req: Request) {
-    try {
-        // Get the username, email and password and verify it
-        const { name, email, password } = await req.json();
-        if (!email || !password) {
-            return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-        }
+  try {
+    const { username, email, password } = await req.json();
 
-        await connectToDB();
-
-        // Return if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return NextResponse.json({ error: "Email already exists" }, { status: 400 });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 11);
-
-        // Create a new user and save it to database
-        const newUser = await User.create({
-            name,
-            email,
-            password: hashedPassword,
-        });
-
-        await newUser.save();
-
-        return NextResponse.json(
-            { message: "User registered successfully", userId: newUser._id.toString() },
-            { status: 201 }
-        );
-    } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    if (!email || !password) {
+      return NextResponse.json({ error: "Email and password required" }, { status: 400 });
     }
+
+    await connectToDB();
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return NextResponse.json({ error: "User already exists" }, { status: 400 });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 11);
+
+    const newUser = new User({ username: username, email:email, password: hashedPassword });
+    await newUser.save();
+
+    return NextResponse.json({ message: "User registered successfully" }, { status: 201 });
+  } catch (err: any) {
+    console.error("Register Error:", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
 }

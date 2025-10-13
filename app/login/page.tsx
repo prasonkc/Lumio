@@ -1,23 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
-import { useSession, signIn } from "next-auth/react";
+import React, { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import bcrypt from "bcryptjs";
 
-const saltRounds = 11;
-
-const Login: React.FC = () => {
+const LoginPage: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    if (status === "authenticated") router.push("/"); // redirect if logged in
+  }, [status, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isLogin) {
+      // Login via NextAuth
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) alert(result.error);
+      else router.push("/");
+    } else {
+      // Signup
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        alert("Signup failed: " + text);
+        return;
+      }
+
+      alert("Signup successful! Please log in.");
+      setIsLogin(true);
+    }
   };
 
   return (
@@ -32,9 +61,9 @@ const Login: React.FC = () => {
             <input
               type="text"
               placeholder="Username"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           )}
@@ -42,18 +71,18 @@ const Login: React.FC = () => {
           <input
             type="email"
             placeholder="Email"
-            className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
 
           <input
             type="password"
             placeholder="Password"
-            className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
 
@@ -71,13 +100,13 @@ const Login: React.FC = () => {
 
         <button
           className="w-full rounded-lg border border-gray-300 py-2 text-white hover:bg-gray-700 cursor-pointer"
-          onClick={() => {signIn("github"); setUsername(session?.user?.name as string)}}
+          onClick={() => signIn("github")}
         >
-          {"Continue with GitHub"}
+          Continue with GitHub
         </button>
 
         <p className="mt-4 text-center text-sm text-gray-400">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-blue-500 hover:underline cursor-pointer"
@@ -91,4 +120,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
