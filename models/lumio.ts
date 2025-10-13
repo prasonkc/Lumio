@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface LumioUser extends Document {
+export interface LumioUser {
+  _id?: string;
   username: string;
   password: string;
   email: string;
