@@ -28,7 +28,7 @@ export default function Home() {
         name={name}
       />
       <ChatSection roomId="room123" name={name}/>
-      <ProfileSidebar name={name}/>
+      <ProfileSidebar name={"Placeholder"}/>
     </div>
   );
 }

@@ -2,63 +2,42 @@ import React from "react";
 import { MoreVertical, Search, MessageCircle, Users } from "lucide-react";
 import Person from "./Person";
 
-interface PeopleProps{
-  name: string,
-  avatarUrl: string,
-  latestChat: string,
-  isOnline: boolean
+interface PeopleProps {
+  name: string;
 }
 
-const PeopleSection: React.FC<PeopleProps> = ({name, avatarUrl, latestChat, isOnline}) => {
+const PeopleSection: React.FC<PeopleProps> = ({ name }) => {
   return (
-    <div className="bg-gray-800 w-1/4 min-h-screen rounded-2xl">
-      <div className="sticky top-0 z-10 bg-gray-800">
-        {/* Header */}
-        <div className="flex items-center justify-between mx-5">
-          <div className="m-3 font-bold text-2xl">Messages</div>
-          <div className="cursor-pointer hover:text-white">
-            <MoreVertical />
-          </div>
-        </div>
+    <div className="flex flex-col bg-gray-900 w-80 min-h-screen border-r border-gray-800">
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+        <h2 className="text-lg font-semibold text-white">Messages</h2>
+        <button className="p-1 hover:bg-gray-800 rounded-lg">
+          <MoreVertical className="text-gray-400" size={20} />
+        </button>
+      </div>
 
-        {/* Search Bar */}
-        <div className="relative m-3">
-          {/* Icon */}
+      {/* Search Bar */}
+      <div className="px-4 py-3">
+        <div className="relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
             size={18}
           />
-          {/* Input */}
           <input
             type="text"
-            placeholder="Search conversations..."
-            className="w-full bg-gray-700 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+            placeholder="Search..."
+            className="w-full bg-gray-800 text-gray-200 pl-10 pr-4 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-2 mt-4">
-          {/* Chats tab */}
-          <button
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors cursor-pointer`}
-          >
-            <MessageCircle size={18} />
-            <span className="text-sm font-medium">Chats</span>
-          </button>
-
-          {/* Contacts tab */}
-          <button
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors cursor-pointer`}
-          >
-            <Users size={18} />
-            <span className="text-sm font-medium">Contacts</span>
-          </button>
         </div>
       </div>
 
-      {/* Peoples Section */}
-      <div className="my-5">
-        <Person name={name} avatarUrl={avatarUrl} latestChat={latestChat} isOnline={isOnline} />
+      {/* People List */}
+      <div className="flex-1 overflow-y-auto px-3 py-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+        <Person name="Alice" />
+        <Person name="Bob" />
+        <Person name="Charlie" />
+        <Person name={name} />
       </div>
     </div>
   );
