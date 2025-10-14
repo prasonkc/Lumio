@@ -16,7 +16,7 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
   const [message, setMessage] = useState("");
   // Set messages array
   const [messages, setMessages] = useState<
-    { text: string; isSender: boolean }[]
+    { text: string; isSender: boolean, sender: string }[]
   >([]);
 
   useEffect(() => {
@@ -28,15 +28,15 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
     // Connect to a room
     socket.emit("join-room", roomId);
 
-    socket.on("new-message", (newMessage) => {
-      setMessages((prev) => [...prev, { text: newMessage, isSender: true }]);
+    socket.on("new-message", ({ sender, message }: { sender: string; message: string }) => {
+      setMessages((prev) => [...prev, { text: message, isSender: sender===name, sender }]);
     });
   }, [roomId]);
 
   const sendMessage = () => {
     // Dont send empty messages
     if (!message.trim()) return;
-    socket?.emit("send-message", { roomId, message: message });
+    socket?.emit("send-message", { roomId, message: message, sender: name });
     // setMessages((prev) => [...prev, { text: msg, isSender: false" }]);
     setMessage("");
   };
@@ -50,7 +50,7 @@ return (
             key={i}
             text={m.text}
             isSender={m.isSender}
-            name={name}
+            name={m.sender}
           />
         ))}
       </div>

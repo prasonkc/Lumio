@@ -24,12 +24,12 @@ io.on("connection", (socket) => {
 
   // Listen for messages from this client
   socket.on("send-message", (data) => {
-    const { roomId, message } = data
-    console.log("Message received:", message);
+    const { roomId, message, sender} = data
+    console.log(sender + "Message received:", message);
 
     // Only broadcast to specific room
-    io.to(roomId).emit("new-message", message)
-
+    io.to(roomId).emit("new-message", { sender, message });
+    
     // Broadcast to all clients
     // io.emit("new-message", msg);
   });
