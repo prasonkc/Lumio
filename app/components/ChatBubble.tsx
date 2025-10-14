@@ -3,53 +3,38 @@ import React from "react";
 interface ChatBubbleProps {
   text: string;
   isSender?: boolean;
-  avatarUrl: string;
+  name?: string;
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({
-  text,
-  isSender = false,
-  avatarUrl,
-}) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ text, isSender = false, name }) => {
   return (
     <div
-      className={`flex w-full my-2 items-end ${
-        isSender ? "justify-end" : "justify-start"
+      className={`flex flex-col w-full my-2 ${
+        isSender ? "items-end" : "items-start"
       }`}
     >
-      {/* Avatar (receiver side) */}
-      {!isSender && (
-        <div className="w-8 h-8 mr-2">
-          <img
-            src={avatarUrl}
-            alt="User avatar"
-            className="w-8 h-8 rounded-full object-cover"
-          />
-        </div>
+      {/* Name above bubble */}
+      {name && (
+        <p
+          className={`text-xs mb-1 ${
+            isSender ? "text-blue-400 text-right" : "text-zinc-400 text-left"
+          }`}
+        >
+          {name}
+        </p>
       )}
 
-      {/* Chat bubble */}
+      {/* Message bubble */}
       <div
-        className={`max-w-[70%] px-4 py-2 rounded-2xl text-white text-sm sm:text-base break-words shadow-md
-        ${
-          isSender
-            ? "bg-blue-600 rounded-br-none"
-            : "bg-blue-500 rounded-bl-none"
-        }`}
+        className={`max-w-[75%] px-4 py-2 rounded-2xl text-sm sm:text-base break-words shadow-md
+          ${
+            isSender
+              ? "bg-blue-600 text-white rounded-br-none"
+              : "bg-zinc-800 text-zinc-100 rounded-bl-none"
+          }`}
       >
         {text}
       </div>
-
-      {/* Avatar (sender side) */}
-      {isSender && (
-        <div className="w-8 h-8 ml-2">
-          <img
-            src={avatarUrl}
-            alt="User avatar"
-            className="w-8 h-8 rounded-full object-cover"
-          />
-        </div>
-      )}
     </div>
   );
 };

@@ -10,8 +10,9 @@ const socket = io("http://localhost:4000", {
 
 interface ChatProps{
   roomId: string
+  name: string
 }
-const ChatSection: React.FC<ChatProps> = ({roomId}) => {
+const ChatSection: React.FC<ChatProps> = ({roomId, name}) => {
   const [message, setMessage] = useState("");
   // Set messages array
   const [messages, setMessages] = useState<
@@ -48,11 +49,7 @@ const ChatSection: React.FC<ChatProps> = ({roomId}) => {
           key={index}
           isSender={m.isSender}
           text={m.text}
-          avatarUrl={
-            m.isSender
-              ? "https://i.pravatar.cc/40?u=sender"
-              : "https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE="
-          }
+          name={name}
         />
       ))}
 
