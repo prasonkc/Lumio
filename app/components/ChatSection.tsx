@@ -8,11 +8,11 @@ const socket = io("http://localhost:4000", {
   transports: ["websocket", "polling"],
 });
 
-interface ChatProps{
-  roomId: string
-  name: string
+interface ChatProps {
+  roomId: string,
+  name: string;
 }
-const ChatSection: React.FC<ChatProps> = ({roomId, name}) => {
+const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
   const [message, setMessage] = useState("");
   // Set messages array
   const [messages, setMessages] = useState<
@@ -24,9 +24,9 @@ const ChatSection: React.FC<ChatProps> = ({roomId, name}) => {
     socket.on("connect", () => {
       console.log("connected", socket.id);
     });
-    
+
     // Connect to a room
-    socket.emit("join-room", roomId)
+    socket.emit("join-room", roomId);
 
     socket.on("new-message", (newMessage) => {
       setMessages((prev) => [...prev, { text: newMessage, isSender: true }]);
@@ -36,45 +36,47 @@ const ChatSection: React.FC<ChatProps> = ({roomId, name}) => {
   const sendMessage = () => {
     // Dont send empty messages
     if (!message.trim()) return;
-    socket?.emit("send-message", {roomId, message: message});
+    socket?.emit("send-message", { roomId, message: message });
     // setMessages((prev) => [...prev, { text: msg, isSender: false" }]);
     setMessage("");
   };
 
-  return (
-    <div className="bg-gray-700 w-2/3 min-h-screen p-3 relative">
-      {/* Chats */}
-      {messages.map((m, index) => (
-        <ChatBubble
-          key={index}
-          isSender={m.isSender}
-          text={m.text}
-          name={name}
-        />
-      ))}
+return (
+    <div className="flex flex-col justify-between bg-gray-900 w-2/3 min-h-screen p-6 relative">
+      {/* Messages area */}
+      <div className="flex-1 overflow-y-auto space-y-3 mb-24">
+        {messages.map((m, i) => (
+          <ChatBubble
+            key={i}
+            text={m.text}
+            isSender={m.isSender}
+            name={name}
+          />
+        ))}
+      </div>
 
-      {/* Typing Section */}
-      <div className="absolute bottom-0 w-full flex items-center justify-center p-5 bg-transparent">
-        <div className="flex items-center w-[70%] bg-gray-600 rounded-full pr-6 pl-8 py-5">
+      {/* Input bar */}
+      <div className="absolute bottom-0 left-0 w-full px-6 pb-6">
+        <div className="flex items-center bg-gray-800 rounded-full px-6 py-3 shadow-lg">
           <input
             type="text"
             placeholder="Message..."
-            className="flex-1 bg-transparent outline-none text-white placeholder-gray-300"
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
+            className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
             value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button
-            className="ml-2 text-blue-400 hover:text-blue-500 cursor-pointer"
             onClick={sendMessage}
+            className="ml-3 text-blue-500 hover:text-blue-400 transition"
           >
-            <Send className="w-6 h-6" />
+            <Send className="w-5 h-5" />
           </button>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default ChatSection;
