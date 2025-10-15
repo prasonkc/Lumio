@@ -8,17 +8,29 @@ interface PeopleProps {
   name: string;
 }
 
-const PeopleSection: React.FC<PeopleProps> = ({ name }) => {
-  const [contacts, setContacts] = useState([])
- useEffect(() => {
-    const fetchContacts = async () => {
-      const res = await fetch("/api/contacts");
-      const data = await res.json();
-      setContacts(data);
-    };
+interface Contact {
+  _id: string;
+  username: string | null;
+}
 
-    fetchContacts();
-  }, []);
+
+const PeopleSection: React.FC<PeopleProps> = ({ name }) => {
+const [contacts, setContacts] = useState<Contact[]>([]);
+
+useEffect(() => {
+  const fetchContacts = async () => {
+    const res = await fetch("/api/contacts");
+    if (!res.ok) {
+      console.error("Failed to fetch contacts");
+      return;
+    }
+    const data = await res.json();
+    console.log(data);
+    setContacts(data);
+  };
+  fetchContacts();
+}, []);
+
   
   return (
     <div className="flex flex-col bg-gray-900 w-80 min-h-screen border-r border-gray-800">
@@ -48,7 +60,7 @@ const PeopleSection: React.FC<PeopleProps> = ({ name }) => {
       {/* People List */}
       <div className="flex-1 overflow-y-auto px-3 py-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
         {contacts.map((person) => (
-          <Person name={person}/>
+          <Person key={person._id} name={person.username as string}/>
         ))}
       </div>
     </div>
