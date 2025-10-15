@@ -13,10 +13,10 @@ const ProfileSidebar: React.FC<SidebarProps> = ({ name }) => {
       </div>
 
       {/* Username */}
-      <h2 className="text-xl font-semibold">{name || "Anonymous"}</h2>
+      <h2 className="text-xl font-semibold">{name || "No Chat Selected"}</h2>
 
       {/* Status or tagline */}
-      <p className="text-gray-400 text-sm mt-1">Online</p>
+      {/* <p className="text-gray-400 text-sm mt-1">Online</p> */}
 
       {/* Divider */}
       <div className="w-full h-px bg-gray-700 my-6" />
