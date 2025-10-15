@@ -10,9 +10,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [name, setname] = useState("");
-  // const [avatarUrl, setavatarUrl] = useState("")
-  // const [onlineStatus, setonlineStatus] = useState(false);
-  // const [latestMessage, setLatestMessage] = useState("");
+  const [currentChat, setCurrentChat] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -21,11 +19,11 @@ export default function Home() {
     setname(session?.user.name as string);
   }, [status, router]);
 
-  // Fetch from database
   return (
     <div className="flex">
       <PeopleSection
         name={name}
+        setCurrentChat={setCurrentChat}
       />
       <ChatSection roomId="room123" name={name}/>
       <ProfileSidebar name={"Placeholder"}/>

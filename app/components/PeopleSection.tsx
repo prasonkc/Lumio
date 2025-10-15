@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 interface PeopleProps {
   name: string;
+  setCurrentChat: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface Contact {
@@ -14,7 +15,7 @@ interface Contact {
 }
 
 
-const PeopleSection: React.FC<PeopleProps> = ({ name }) => {
+const PeopleSection: React.FC<PeopleProps> = ({ name, setCurrentChat }) => {
 const [contacts, setContacts] = useState<Contact[]>([]);
 
 useEffect(() => {
@@ -60,7 +61,12 @@ useEffect(() => {
       {/* People List */}
       <div className="flex-1 overflow-y-auto px-3 py-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
         {contacts.map((person) => (
-          <Person key={person._id} name={person.username as string}/>
+            <div
+            key={person._id}
+            onClick={() => setCurrentChat(person.username as string)}
+          >
+            <Person name={person.username as string} />
+          </div>
         ))}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 
 interface PersonProps{
   name: string,
