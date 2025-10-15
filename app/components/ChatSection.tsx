@@ -9,14 +9,14 @@ const socket = io("http://localhost:4000", {
 });
 
 interface ChatProps {
-  roomId: string,
+  roomId: string;
   name: string;
 }
 const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
   const [message, setMessage] = useState("");
   // Set messages array
   const [messages, setMessages] = useState<
-    { text: string; isSender: boolean, sender: string }[]
+    { text: string; isSender: boolean; sender: string }[]
   >([]);
 
   useEffect(() => {
@@ -28,9 +28,15 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
     // Connect to a room
     socket.emit("join-room", roomId);
 
-    socket.on("new-message", ({ sender, message }: { sender: string; message: string }) => {
-      setMessages((prev) => [...prev, { text: message, isSender: sender===name, sender }]);
-    });
+    socket.on(
+      "new-message",
+      ({ sender, message }: { sender: string; message: string }) => {
+        setMessages((prev) => [
+          ...prev,
+          { text: message, isSender: sender === name, sender },
+        ]);
+      }
+    );
   }, [roomId]);
 
   const sendMessage = () => {
@@ -41,10 +47,22 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
     setMessage("");
   };
 
-return (
-    <div className="flex flex-col justify-between bg-gray-900 w-2/3 min-h-screen p-6 relative">
+  return (
+    <div className="flex flex-col justify-between bg-gray-900 w-2/3 min-h-screen px-6 relative">
+      <div className="flex items-center justify-between bg-gray-800 px-3 py-2 border-b border-gray-700 rounded-t-2xl shadow-md">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg shadow-sm">
+            {name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-lg">{name}</h2>
+            <p className="text-xs text-green-400">online</p>
+          </div>
+        </div>
+      </div>
+
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto space-y-3 mb-24">
+      <div className="flex-1 overflow-y-auto space-y-3 mb-24 mt-2">
         {messages.map((m, i) => (
           <ChatBubble
             key={i}
@@ -77,6 +95,5 @@ return (
     </div>
   );
 };
-
 
 export default ChatSection;

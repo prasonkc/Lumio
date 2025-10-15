@@ -25,7 +25,7 @@ export default function Home() {
         name={name}
         setCurrentChat={setCurrentChat}
       />
-      <ChatSection roomId="room123" name={name}/>
+      <ChatSection roomId="room123" name={currentChat}/>
       <ProfileSidebar name={currentChat}/>
     </div>
   );
