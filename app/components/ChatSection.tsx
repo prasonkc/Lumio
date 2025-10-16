@@ -14,6 +14,11 @@ interface ChatProps {
   currentChat: string;
 }
 const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
+  useEffect(() => {
+  console.log("Joining room:", roomId);
+  socket.emit("join-room", roomId);
+}, [roomId]);
+
   const [message, setMessage] = useState("");
   // Set messages array
   const [messages, setMessages] = useState<
@@ -32,10 +37,13 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
     const handleNewMessage = ({
       sender,
       message,
+      roomId: incomingRoomId
     }: {
       sender: string;
       message: string;
+      roomId: string
     }) => {
+      if (incomingRoomId !== roomId) return;
       setMessages((prev) => [
         ...prev,
         {

@@ -20,7 +20,7 @@ export default function Home() {
 
   if (!session) return null;
   const name = session.user?.name ?? "";
-  const roomid = [session.user.id, currentChatID].sort().join('');
+const roomid = [session.user?.id, currentChatID].filter(Boolean).sort().join('_');
 
   return (
     <div className="flex">

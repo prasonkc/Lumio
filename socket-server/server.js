@@ -28,16 +28,13 @@ io.on("connection", (socket) => {
     console.log(sender + "Message received:", message);
 
     // Only broadcast to specific room
-    io.to(roomId).emit("new-message", { sender, message });
+    io.to(roomId).emit("new-message", { sender, message, roomId });
     
     // Broadcast to all clients
     // io.emit("new-message", msg);
   });
 
   // Typing indicator
-  socket.on("typing", ({ userId }) => {
-    socket.broadcast.emit("user-typing", { userId });
-  });
 
   // Handle disconnect
   socket.on("disconnect", (reason) => {
