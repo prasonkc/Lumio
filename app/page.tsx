@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  // const [name, setname] = useState("");
   const [currentChat, setCurrentChat] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -21,13 +20,16 @@ export default function Home() {
   if (!session) return null;
   const name = session.user?.name ?? "";
 
+  const roomid = session.user.id;
+  console.log(roomid)
+
   return (
     <div className="flex">
       <PeopleSection
         name={name}
         setCurrentChat={setCurrentChat}
       />
-      <ChatSection roomId="room123" name={name}/>
+      <ChatSection roomId={roomid} name={name}/>
       <ProfileSidebar name={currentChat}/>
     </div>
   );
