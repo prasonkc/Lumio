@@ -9,30 +9,26 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [name, setname] = useState("");
+  // const [name, setname] = useState("");
   const [currentChat, setCurrentChat] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
 
-useEffect(() => {
-  if (status === "unauthenticated") router.push("/login");
+  useEffect(() => {
+    if (status === "unauthenticated") router.push("/login");
+  }, [status, router]);
 
-  if (status === "authenticated" && session?.user?.email) {
-    setname(session.user.name as string);
-    console.log(session.user.name);
-    console.log("Name:", name);
-  }
-}, [status, session, router]);
-
+  if (!session) return null;
+  const name = session.user?.name ?? "";
 
   return (
     <div className="flex">
-      {/* <PeopleSection
+      <PeopleSection
         name={name}
         setCurrentChat={setCurrentChat}
       />
       <ChatSection roomId="room123" name={name}/>
-      <ProfileSidebar name={currentChat}/> */}
+      <ProfileSidebar name={currentChat}/>
     </div>
   );
 }
