@@ -63,7 +63,7 @@ useEffect(() => {
         {contacts.map((person) => (
             <div
             key={person._id}
-            onClick={() => {setCurrentChat(person.username as string); setCurrentChatID(person._id)}}
+            onClick={() => {setCurrentChat(person.username as string); setCurrentChatID(person._id);}}
           >
             <Person name={person.username as string} />
           </div>

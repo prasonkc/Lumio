@@ -20,30 +20,44 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
     { text: string; isSender: boolean; sender: string }[]
   >([]);
 
-useEffect(() => {
-  // Connect to server
-  socket.on("connect", () => {
-    console.log("connected", socket.id);
-  });
+  useEffect(() => {
+    // Connect to server
+    socket.on("connect", () => {
+      console.log("connected", socket.id);
+    });
 
-  // Join room
-  socket.emit("join-room", roomId);
+    // Join room
+    socket.emit("join-room", roomId);
 
-  const handleNewMessage = ({ sender, message }: { sender: string; message: string }) => {
-    setMessages((prev) => [
-      ...prev,
-      { text: message, isSender: sender.trim().toLowerCase() === name.trim().toLowerCase(), sender },
-    ]);
-  };
+    const handleNewMessage = ({
+      sender,
+      message,
+    }: {
+      sender: string;
+      message: string;
+    }) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: message,
+          isSender: sender.trim().toLowerCase() === name.trim().toLowerCase(),
+          sender,
+        },
+      ]);
+    };
 
-  socket.on("new-message", handleNewMessage);
+    socket.on("new-message", handleNewMessage);
 
-  // Cleanup
-  return () => {
-    socket.off("new-message", handleNewMessage);
-  };
-}, [roomId, name]);
+    // Cleanup
+    return () => {
+      socket.off("new-message", handleNewMessage);
+    };
+  }, [roomId, name]);
 
+  // Erase the message when current chat changes
+  useEffect(() => {
+      setMessages([]);
+  }, [currentChat]);
 
   const sendMessage = () => {
     // Dont send empty messages
