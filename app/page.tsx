@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import PeopleSection from "./components/PeopleSection";
-import ChatSection from "./components/ChatSection";
+import ChatSection from "./components/chat/ChatSection";
 import ProfileSidebar from "./components/ProfileSidebar";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";

@@ -1,0 +1,77 @@
+import React, { useEffect, useState } from "react";
+import { socket } from "./socket";
+import MessagesArea from "./MessagesArea";
+import ChatInput from "./ChatInput";
+
+interface ChatProps {
+  roomId: string;
+  name: string;
+  currentChat: string;
+}
+
+const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<{ text: string; isSender: boolean; sender: string }[]>([]);
+
+  useEffect(() => {
+    console.log("Joining room:", roomId);
+    socket.emit("join-room", roomId);
+  }, [roomId]);
+
+  useEffect(() => {
+    const handleNewMessage = ({
+      sender,
+      message,
+      roomId: incomingRoomId,
+    }: {
+      sender: string;
+      message: string;
+      roomId: string;
+    }) => {
+      if (incomingRoomId !== roomId) return;
+      setMessages((prev) => [
+        ...prev,
+        { text: message, isSender: sender.trim().toLowerCase() === name.trim().toLowerCase(), sender },
+      ]);
+    };
+
+    socket.on("new-message", handleNewMessage);
+
+    return () => {
+      socket.off("new-message", handleNewMessage);
+    };
+  }, [roomId, name]);
+
+  useEffect(() => {
+    setMessages([]);
+  }, [currentChat]);
+
+  const sendMessage = () => {
+    if (!message.trim()) return;
+    socket.emit("send-message", { roomId, message, sender: name });
+    setMessage("");
+  };
+
+  return (
+    <div className="flex flex-col justify-between bg-gray-900 w-2/3 min-h-screen px-6 relative">
+      <div className="flex items-center justify-between bg-gray-800 px-3 py-2 border-b border-gray-700 rounded-t-2xl shadow-md">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg shadow-sm">
+            {currentChat.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-lg">
+              {currentChat || "No chats selected"}
+            </h2>
+            <p className="text-xs text-green-400">online</p>
+          </div>
+        </div>
+      </div>
+
+      <MessagesArea messages={messages} />
+      <ChatInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
+    </div>
+  );
+};
+
+export default ChatSection;
