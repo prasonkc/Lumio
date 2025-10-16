@@ -26,7 +26,6 @@ useEffect(() => {
       return;
     }
     const data = await res.json();
-    console.log(data);
     setContacts(data);
   };
   fetchContacts();

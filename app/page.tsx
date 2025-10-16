@@ -14,19 +14,25 @@ export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (status === "unauthenticated") router.push("/login");
-    setname(session?.user.name as string);
-  }, [status, router]);
+useEffect(() => {
+  if (status === "unauthenticated") router.push("/login");
+
+  if (status === "authenticated" && session?.user?.email) {
+    setname(session.user.name as string);
+    console.log(session.user.name);
+    console.log("Name:", name);
+  }
+}, [status, session, router]);
+
 
   return (
     <div className="flex">
-      <PeopleSection
+      {/* <PeopleSection
         name={name}
         setCurrentChat={setCurrentChat}
       />
-      <ChatSection roomId="room123" name={currentChat}/>
-      <ProfileSidebar name={currentChat}/>
+      <ChatSection roomId="room123" name={name}/>
+      <ProfileSidebar name={currentChat}/> */}
     </div>
   );
 }
