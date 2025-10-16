@@ -11,33 +11,39 @@ const socket = io("http://localhost:4000", {
 interface ChatProps {
   roomId: string;
   name: string;
+  currentChat: string;
 }
-const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
+const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
   const [message, setMessage] = useState("");
   // Set messages array
   const [messages, setMessages] = useState<
     { text: string; isSender: boolean; sender: string }[]
   >([]);
 
-  useEffect(() => {
-    // Connect to server
-    socket.on("connect", () => {
-      console.log("connected", socket.id);
-    });
+useEffect(() => {
+  // Connect to server
+  socket.on("connect", () => {
+    console.log("connected", socket.id);
+  });
 
-    // Connect to a room
-    socket.emit("join-room", roomId);
+  // Join room
+  socket.emit("join-room", roomId);
 
-    socket.on(
-      "new-message",
-      ({ sender, message }: { sender: string; message: string }) => {
-        setMessages((prev) => [
-          ...prev,
-          { text: message, isSender: sender === name, sender },
-        ]);
-      }
-    );
-  }, [roomId]);
+  const handleNewMessage = ({ sender, message }: { sender: string; message: string }) => {
+    setMessages((prev) => [
+      ...prev,
+      { text: message, isSender: sender.trim().toLowerCase() === name.trim().toLowerCase(), sender },
+    ]);
+  };
+
+  socket.on("new-message", handleNewMessage);
+
+  // Cleanup
+  return () => {
+    socket.off("new-message", handleNewMessage);
+  };
+}, [roomId, name]);
+
 
   const sendMessage = () => {
     // Dont send empty messages
@@ -52,10 +58,12 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name }) => {
       <div className="flex items-center justify-between bg-gray-800 px-3 py-2 border-b border-gray-700 rounded-t-2xl shadow-md">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg shadow-sm">
-            {name.charAt(0).toUpperCase()}
+            {currentChat.charAt(0).toUpperCase()}
           </div>
           <div>
-            <h2 className="text-white font-semibold text-lg">{name}</h2>
+            <h2 className="text-white font-semibold text-lg">
+              {currentChat ? currentChat : "No chats selected"}
+            </h2>
             <p className="text-xs text-green-400">online</p>
           </div>
         </div>

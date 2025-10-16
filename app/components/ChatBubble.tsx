@@ -6,14 +6,14 @@ interface ChatBubbleProps {
   name?: string;
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ text, isSender = false, name }) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ text, isSender, name }) => {
   return (
     <div
       className={`flex flex-col w-full my-2 ${
         isSender ? "items-end" : "items-start"
       }`}
     >
-      {/* Name above bubble */}
+      {/* Name */}
       {name && (
         <p
           className={`text-xs mb-1 ${

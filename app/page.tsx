@@ -21,7 +21,6 @@ export default function Home() {
   const name = session.user?.name ?? "";
 
   const roomid = session.user.id;
-  console.log(roomid)
 
   return (
     <div className="flex">
@@ -29,7 +28,7 @@ export default function Home() {
         name={name}
         setCurrentChat={setCurrentChat}
       />
-      <ChatSection roomId={roomid} name={name}/>
+      <ChatSection roomId={roomid} name={name} currentChat={currentChat}/>
       <ProfileSidebar name={currentChat}/>
     </div>
   );
