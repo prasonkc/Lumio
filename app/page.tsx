@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [currentChat, setCurrentChat] = useState("");
+  const [currentChatID, setCurrentChatID] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -19,14 +20,14 @@ export default function Home() {
 
   if (!session) return null;
   const name = session.user?.name ?? "";
-
-  const roomid = session.user.id;
+  const roomid = [session.user.id, currentChatID].sort().join('');
 
   return (
     <div className="flex">
       <PeopleSection
         name={name}
         setCurrentChat={setCurrentChat}
+        setCurrentChatID={setCurrentChatID}
       />
       <ChatSection roomId={roomid} name={name} currentChat={currentChat}/>
       <ProfileSidebar name={currentChat}/>
