@@ -20,7 +20,10 @@ export default function Home() {
 
   if (!session) return null;
   const name = session.user?.name ?? "";
-const roomid = [session.user?.id, currentChatID].filter(Boolean).sort().join('_');
+  const roomid = [session.user?.id, currentChatID]
+    .filter(Boolean)
+    .sort()
+    .join("_");
 
   return (
     <div className="flex">
@@ -29,8 +32,8 @@ const roomid = [session.user?.id, currentChatID].filter(Boolean).sort().join('_'
         setCurrentChat={setCurrentChat}
         setCurrentChatID={setCurrentChatID}
       />
-      <ChatSection roomId={roomid} name={name} currentChat={currentChat}/>
-      <ProfileSidebar name={currentChat}/>
+      <ChatSection roomId={roomid} name={name} currentChat={currentChat} />
+      <ProfileSidebar name={currentChat} />
     </div>
   );
 }

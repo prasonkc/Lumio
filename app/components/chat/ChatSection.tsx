@@ -13,11 +13,28 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{ text: string; isSender: boolean; sender: string }[]>([]);
 
+  // Join room
   useEffect(() => {
     console.log("Joining room:", roomId);
     socket.emit("join-room", roomId);
   }, [roomId]);
 
+  // Load messages from localStorage
+  useEffect(() => {
+    const savedMessages = localStorage.getItem(`chat_${roomId}`);
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    } else {
+      setMessages([]);
+    }
+  }, [roomId]);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(`chat_${roomId}`, JSON.stringify(messages));
+  }, [messages, roomId]);
+
+  // Listen for new messages
   useEffect(() => {
     const handleNewMessage = ({
       sender,
@@ -41,10 +58,6 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
       socket.off("new-message", handleNewMessage);
     };
   }, [roomId, name]);
-
-  useEffect(() => {
-    setMessages([]);
-  }, [currentChat]);
 
   const sendMessage = () => {
     if (!message.trim()) return;
@@ -73,5 +86,6 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
     </div>
   );
 };
+
 
 export default ChatSection;
