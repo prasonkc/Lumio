@@ -43,6 +43,7 @@ io.on("connection", (socket) => {
 });
 
 //start server once
-httpServer.listen(4000, () => {
+
+httpServer.listen(process.env.PORT || 4000, () => {
   console.log("Socket.IO server running on port 4000");
 });
