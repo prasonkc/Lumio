@@ -66,7 +66,7 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
   };
 
   return (
-    <div className="flex flex-col justify-between bg-gray-900 w-2/3 min-h-screen px-6 relative">
+    <div className="flex flex-col justify-between bg-gray-900 md:w-2/3 min-h-screen px-6 relative w-full">
       <div className="flex items-center justify-between bg-gray-800 px-3 py-2 border-b border-gray-700 rounded-t-2xl shadow-md">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg shadow-sm">

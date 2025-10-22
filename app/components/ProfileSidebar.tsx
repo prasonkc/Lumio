@@ -6,7 +6,7 @@ interface SidebarProps {
 
 const ProfileSidebar: React.FC<SidebarProps> = ({ name }) => {
   return (
-    <div className="bg-gray-900 w-1/4 min-h-screen text-white flex flex-col items-center p-8 border-l border-gray-800">
+    <div className="bg-gray-900 w-1/4 min-h-screen text-white md:flex flex-col items-center p-8 border-l border-gray-800 hidden">
       {/* Avatar */}
       <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold mb-4 shadow-lg">
         {name ? name[0].toUpperCase() : "?"}

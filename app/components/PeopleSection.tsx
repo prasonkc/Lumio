@@ -34,7 +34,7 @@ useEffect(() => {
 
   
   return (
-    <div className="flex flex-col bg-gray-900 w-80 min-h-screen border-r border-gray-800">
+    <div className="md:flex flex-col bg-gray-900 w-80 min-h-screen border-r border-gray-800 hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
         <h2 className="text-lg font-semibold text-white">Messages</h2>
