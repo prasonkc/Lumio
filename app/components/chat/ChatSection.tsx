@@ -93,7 +93,7 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat, hamburgOp
           </div>
         </div>
           {/* Hamburger */}
-          <div onClick={(e) => {setHamburgOpen(!hamburgOpen)}}>
+          <div onClick={() => {setHamburgOpen(!hamburgOpen)}} className="md:hidden">
             {hamburgOpen ? <X size={30}/> : <Menu size={30}/>}
           </div>
       </div>
