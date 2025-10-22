@@ -2,16 +2,22 @@ import React, { useEffect, useState } from "react";
 import { socket } from "./socket";
 import MessagesArea from "./MessagesArea";
 import ChatInput from "./ChatInput";
+import { Menu, X } from "lucide-react";
+
 
 interface ChatProps {
   roomId: string;
   name: string;
   currentChat: string;
+  hamburgOpen: boolean;
+  setHamburgOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
+const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat, hamburgOpen, setHamburgOpen }) => {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<{ text: string; isSender: boolean; sender: string }[]>([]);
+  const [messages, setMessages] = useState<
+    { text: string; isSender: boolean; sender: string }[]
+  >([]);
 
   // Join room
   useEffect(() => {
@@ -48,7 +54,11 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
       if (incomingRoomId !== roomId) return;
       setMessages((prev) => [
         ...prev,
-        { text: message, isSender: sender.trim().toLowerCase() === name.trim().toLowerCase(), sender },
+        {
+          text: message,
+          isSender: sender.trim().toLowerCase() === name.trim().toLowerCase(),
+          sender,
+        },
       ]);
     };
 
@@ -68,10 +78,13 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
   return (
     <div className="flex flex-col justify-between bg-gray-900 md:w-2/3 min-h-screen px-6 relative w-full">
       <div className="flex items-center justify-between bg-gray-800 px-3 py-2 border-b border-gray-700 rounded-t-2xl shadow-md">
-        <div className="flex items-center space-x-3">
+        {/* Nav panel */}
+        <div className="flex justify-between md:justify-start items-center space-x-3">
+          {/* icon */}
           <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-lg shadow-sm">
             {currentChat.charAt(0).toUpperCase()}
           </div>
+          {/* name */}
           <div>
             <h2 className="text-white font-semibold text-lg">
               {currentChat || "No chats selected"}
@@ -79,13 +92,20 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat }) => {
             <p className="text-xs text-green-400">online</p>
           </div>
         </div>
+          {/* Hamburger */}
+          <div onClick={(e) => {setHamburgOpen(!hamburgOpen)}}>
+            {hamburgOpen ? <X size={30}/> : <Menu size={30}/>}
+          </div>
       </div>
 
       <MessagesArea messages={messages} />
-      <ChatInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
+      <ChatInput
+        message={message}
+        setMessage={setMessage}
+        sendMessage={sendMessage}
+      />
     </div>
   );
 };
-
 
 export default ChatSection;
