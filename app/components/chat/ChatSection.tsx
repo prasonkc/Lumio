@@ -4,7 +4,6 @@ import MessagesArea from "./MessagesArea";
 import ChatInput from "./ChatInput";
 import { Menu, X } from "lucide-react";
 
-
 interface ChatProps {
   roomId: string;
   name: string;
@@ -61,7 +60,6 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat, hamburgOp
         },
       ]);
     };
-
     socket.on("new-message", handleNewMessage);
 
     return () => {
