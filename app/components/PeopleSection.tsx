@@ -40,6 +40,7 @@ const PeopleSection: React.FC<PeopleProps> = ({
   return (
     <div>
       {hamburgOpen && (
+        // change here => chatsection hidden when hamburgOpen=true; this div takes full space
         <div className="flex flex-col bg-gray-900 md:w-80 w-full min-h-screen border-r border-gray-800">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">

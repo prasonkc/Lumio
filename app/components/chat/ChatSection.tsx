@@ -86,7 +86,7 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat, hamburgOp
           </div>
           {/* name */}
           <div>
-            <h2 className="text-white font-semibold text-lg">
+            <h2 className="text-white font-semibold text-lg ">
               {currentChat || "No chats selected"}
             </h2>
             <p className="text-xs text-green-400">online</p>
