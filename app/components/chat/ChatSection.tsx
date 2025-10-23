@@ -51,15 +51,24 @@ const ChatSection: React.FC<ChatProps> = ({ roomId, name, currentChat, hamburgOp
       roomId: string;
     }) => {
       if (incomingRoomId !== roomId) return;
+      const isSender = sender.trim().toLowerCase() === name.trim().toLowerCase();
       setMessages((prev) => [
         ...prev,
         {
           text: message,
-          isSender: sender.trim().toLowerCase() === name.trim().toLowerCase(),
+          isSender,
           sender,
         },
       ]);
+
+      // Send notifications
+      if (!isSender && typeof Notification !== "undefined" && Notification.permission === "granted") {
+        new Notification(`New Message from ${sender}`, {
+          body: message,
+        });
+      }
     };
+
     socket.on("new-message", handleNewMessage);
 
     return () => {

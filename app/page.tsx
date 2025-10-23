@@ -18,6 +18,14 @@ export default function Home() {
   // hamburg state (for phones)
   const [hamburgOpen, setHamburgOpen] = useState(true);
 
+  // Request notification permission
+  useEffect(() => {
+  if (Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+}, []);
+
+
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
