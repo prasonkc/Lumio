@@ -20,11 +20,10 @@ export default function Home() {
 
   // Request notification permission
   useEffect(() => {
-  if (Notification.permission === "default") {
-    Notification.requestPermission();
-  }
-}, []);
-
+    if (Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -38,15 +37,27 @@ export default function Home() {
     .join("_");
 
   return (
-    <div className="flex">
-      <PeopleSection
-        name={name}
-        setCurrentChat={setCurrentChat}
-        setCurrentChatID={setCurrentChatID}
-        hamburgOpen = {hamburgOpen}
-      />
-      <ChatSection roomId={roomid} name={name} currentChat={currentChat} hamburgOpen={hamburgOpen} setHamburgOpen={setHamburgOpen}/>
-      <ProfileSidebar name={currentChat} />
+    <div>
+      <div className="md:flex hidden">
+        <PeopleSection
+          name={name}
+          setCurrentChat={setCurrentChat}
+          setCurrentChatID={setCurrentChatID}
+          hamburgOpen={hamburgOpen}
+        />
+        <ChatSection
+          roomId={roomid}
+          name={name}
+          currentChat={currentChat}
+          hamburgOpen={hamburgOpen}
+          setHamburgOpen={setHamburgOpen}
+        />
+        <ProfileSidebar name={currentChat} />
+      </div>
+
+      <div className="md:hidden text-xs text-white flex w-[100vw] h-[700px] justify-center items-center">
+        <div>Switch to desktop to use this application</div>
+      </div>
     </div>
   );
 }
